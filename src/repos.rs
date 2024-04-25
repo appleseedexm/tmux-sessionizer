@@ -154,15 +154,13 @@ fn find_submodules(
     Ok(())
 }
 
-fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Vec<PathBuf>, TmsError> {
-    let mut result = Ok(Vec::new());
-    result = match manual_dirs {
-        Some(x) => x
-            .iter()
-            .map(|path| canonicalize(path).change_context(TmsError::IoError))
-            .collect::<Result<Vec<PathBuf>, TmsError>>(),
-
-        None => result,
-    };
-    result
+fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Option<Vec<PathBuf>>, TmsError> {
+    match manual_dirs {
+        Some(x) => Ok(Some(
+            x.iter()
+                .map(|path| canonicalize(path).change_context(TmsError::IoError))
+                .collect::<Result<Vec<PathBuf>, TmsError>>()?,
+        )),
+        None => Ok(None),
+    }
 }
