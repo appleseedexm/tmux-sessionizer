@@ -3,8 +3,8 @@ use error_stack::{Result, ResultExt};
 use git2::{Repository, Submodule};
 use std::{
     collections::{HashMap, VecDeque},
-    fs,
-    path::Path,
+    fs::{self, canonicalize},
+    path::{Path, PathBuf},
 };
 
 use crate::{configs::SearchDirectory, dirty_paths::DirtyUtf8Path, TmsError};
@@ -154,18 +154,15 @@ fn find_submodules(
     Ok(())
 }
 
-fn find_folders(manual_dirs: Option<Vec<String>>)-> Result<Vec<String>, TmsError>{
+fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Vec<PathBuf>, TmsError> {
+    let mut result = Ok(Vec::new());
+    result = match manual_dirs {
+        Some(x) => x
+            .iter()
+            .map(|path| canonicalize(path).change_context(TmsError::IoError))
+            .collect::<Result<Vec<PathBuf>, TmsError>>(),
 
-    if manual_dirs.is_none(){
-        return Ok(Vec::new())
-    }
-
-    let mut valid_paths = Vec::new();
-
-    for path in manual_dirs.iter(){
-
-    }
-
-    Ok(valid_paths)
-
+        None => result,
+    };
+    result
 }
