@@ -2,7 +2,10 @@ use assert_cmd::Command;
 use pretty_assertions::assert_eq;
 use std::fs;
 use tempfile::tempdir;
-use tms::configs::{Config, PickerColorConfig, SearchDirectory, SessionSortOrderConfig};
+use tms::{
+    configs::{Config, PickerColorConfig, SearchDirectory, SessionSortOrderConfig},
+    repos::find_folders,
+};
 
 #[test]
 fn tms_fails_with_missing_config() -> anyhow::Result<()> {
@@ -20,6 +23,19 @@ fn tms_fails_with_missing_config() -> anyhow::Result<()> {
         .stderr(predicates::str::contains(
             "No default search path was found",
         ));
+
+    Ok(())
+}
+
+#[test]
+fn temp_folders() -> anyhow::Result<()> {
+    //let temp_string =["/temp"].map(String::from).to_vec(); --- doesnt work since doesnt exist
+    let temp_string =["/tmp"].map(String::from).to_vec(); 
+
+    let path = find_folders(Some(temp_string));
+
+    assert_eq!(path.is_ok(), true);
+    assert_eq!(path.ok().is_some(), true);
 
     Ok(())
 }
@@ -47,6 +63,7 @@ fn tms_config() -> anyhow::Result<()> {
         session_sort_order: Some(SessionSortOrderConfig::Alphabetical),
         excluded_dirs: Some(vec![excluded_dir.clone()]),
         search_paths: None,
+        manual_dirs: None,
         search_dirs: Some(vec![SearchDirectory::new(
             fs::canonicalize(directory.path())?,
             depth,

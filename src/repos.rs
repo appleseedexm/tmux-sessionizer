@@ -154,7 +154,7 @@ fn find_submodules(
     Ok(())
 }
 
-fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Option<Vec<PathBuf>>, TmsError> {
+pub fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Option<Vec<PathBuf>>, TmsError> {
     match manual_dirs {
         Some(x) => Ok(Some(
             x.iter()
