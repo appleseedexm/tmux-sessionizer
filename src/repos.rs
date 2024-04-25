@@ -153,3 +153,19 @@ fn find_submodules(
     }
     Ok(())
 }
+
+fn find_folders(manual_dirs: Option<Vec<String>>)-> Result<Vec<String>, TmsError>{
+
+    if manual_dirs.is_none(){
+        return Ok(Vec::new())
+    }
+
+    let mut valid_paths = Vec::new();
+
+    for path in manual_dirs.iter(){
+
+    }
+
+    Ok(valid_paths)
+
+}

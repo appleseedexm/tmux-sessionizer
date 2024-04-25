@@ -37,6 +37,7 @@ pub struct Config {
     pub switch_filter_unknown: Option<bool>,
     pub session_sort_order: Option<SessionSortOrderConfig>,
     pub excluded_dirs: Option<Vec<String>>,
+    pub manual_dirs: Option<Vec<String>>,
     pub search_paths: Option<Vec<String>>, // old format, deprecated
     pub search_dirs: Option<Vec<SearchDirectory>>,
     pub sessions: Option<Vec<Session>>,
