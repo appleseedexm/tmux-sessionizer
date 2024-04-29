@@ -1,11 +1,15 @@
-use std::{collections::HashMap, fs::canonicalize, path::Path};
+use std::{
+    collections::HashMap,
+    fs::canonicalize,
+    path::{Path, PathBuf},
+};
 
 use crate::{
     configs::{Config, SearchDirectory, SessionSortOrderConfig},
     dirty_paths::DirtyUtf8Path,
     execute_command, get_single_selection,
     picker::Preview,
-    repos::{find_repos, RepoContainer},
+    repos::{find_folders, find_repos, RepoContainer},
     session_exists, set_up_tmux_env, switch_to_session,
     tmux::Tmux,
     TmsError,
@@ -237,6 +241,11 @@ fn switch_command(config: Config, tmux: &Tmux) -> Result<(), TmsError> {
             config.search_submodules,
             config.recursive_submodules,
         )?;
+
+        let manual_dirs = find_folders(config.manual_dirs)?.unwrap()
+            .into_iter()
+            .map(|path| path.to_string())
+            .collect::<Result<Vec<_>, _>>()?;
 
         sessions = sessions
             .into_iter()
