@@ -2,9 +2,7 @@ use aho_corasick::{AhoCorasickBuilder, MatchKind};
 use error_stack::{Result, ResultExt};
 use git2::{Repository, Submodule};
 use std::{
-    collections::{HashMap, VecDeque},
-    fs::{self, canonicalize},
-    path::{Path, PathBuf},
+    collections::{HashMap, VecDeque}, fs, path::Path
 };
 
 use crate::{configs::SearchDirectory, dirty_paths::DirtyUtf8Path, TmsError};
@@ -152,15 +150,4 @@ fn find_submodules(
         repos.insert_repo(name, repo);
     }
     Ok(())
-}
-
-pub fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Option<Vec<PathBuf>>, TmsError> {
-    match manual_dirs {
-        Some(x) => Ok(Some(
-            x.iter()
-                .map(|path| canonicalize(path).change_context(TmsError::IoError))
-                .collect::<Result<Vec<PathBuf>, TmsError>>()?,
-        )),
-        None => Ok(None),
-    }
 }

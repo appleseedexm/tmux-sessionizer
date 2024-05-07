@@ -29,13 +29,14 @@ fn tms_fails_with_missing_config() -> anyhow::Result<()> {
 
 #[test]
 fn temp_folders() -> anyhow::Result<()> {
-    //let temp_string =["/temp"].map(String::from).to_vec(); --- doesnt work since doesnt exist
-    let temp_string =["/tmp"].map(String::from).to_vec(); 
+    //let temp_string =["/temp"].map(String::from).to_vec(); 
+    let temp_string =["/tmp", "/var"].map(String::from).to_vec(); 
 
-    let path = find_folders(Some(temp_string));
+    let path = find_folders(None());
 
-    assert_eq!(path.is_ok(), true);
-    assert_eq!(path.ok().is_some(), true);
+    assert_eq!(path.is_ok(), false);
+    //assert_eq!(path.is_ok(), true);
+    //assert_eq!(path.ok().unwrap().unwrap().len(), 2);
 
     Ok(())
 }

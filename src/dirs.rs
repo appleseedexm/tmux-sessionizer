@@ -7,12 +7,12 @@ pub trait DirContainer {
     fn find_dir(&self, name: &str) -> Option<&PathBuf>;
 }
 
-//impl DirContainer for Vec<PathBuf>{
+impl DirContainer for Vec<PathBuf>{
 
-//fn find_dir(&self, name: &str) -> Option<PathBuf>{
+fn find_dir(&self, name: &str) -> Option<&PathBuf>{
 
-//}
-//}
+}
+}
 
 pub fn find_folders(manual_dirs: Option<Vec<String>>) -> Result<Option<Vec<PathBuf>>, TmsError> {
     match manual_dirs {
