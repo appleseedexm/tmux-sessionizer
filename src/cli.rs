@@ -6,6 +6,7 @@ use std::{
 
 use crate::{
     configs::{Config, SearchDirectory, SessionSortOrderConfig},
+    dirs::{manual_dirs, DirContainer},
     dirty_paths::DirtyUtf8Path,
     execute_command, get_single_selection,
     picker::Preview,
@@ -242,14 +243,13 @@ fn switch_command(config: Config, tmux: &Tmux) -> Result<(), TmsError> {
             config.recursive_submodules,
         )?;
 
-        let manual_dirs = find_folders(config.manual_dirs)?.unwrap()
-            .into_iter()
-            .map(|path| path.to_string())
-            .collect::<Result<Vec<_>, _>>()?;
+        let manual_dirs = manual_dirs(config.manual_dirs)?.unwrap();
 
         sessions = sessions
             .into_iter()
-            .filter(|session| repos.find_repo(session).is_some())
+            .filter(|session| {
+                repos.find_repo(session).is_some() || manual_dirs.find_dir(session).is_some()
+            })
             .collect::<Vec<String>>();
     }
 
