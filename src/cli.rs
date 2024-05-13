@@ -10,7 +10,7 @@ use crate::{
     dirty_paths::DirtyUtf8Path,
     execute_command, get_single_selection,
     picker::Preview,
-    repos::{find_folders, find_repos, RepoContainer},
+    repos::{find_repos, RepoContainer},
     session_exists, set_up_tmux_env, switch_to_session,
     tmux::Tmux,
     TmsError,
@@ -56,6 +56,9 @@ pub struct ConfigCommand {
     #[arg(short = 'p', long = "paths", value_name = "search paths", num_args = 1..)]
     /// The paths to search through. Shell like expansions such as '~' are supported
     search_paths: Option<Vec<String>>,
+    #[arg(long = "manual-dirs", value_name = "manually added dirs", num_args = 1..)]
+    /// The paths to manually add to the list, have to exist. Shell like expansions such as '~' are supported
+    manual_dirs: Option<Vec<String>>,
     #[arg(short = 's', long = "session", value_name = "default session")]
     /// The default session to switch to (if available) when killing another session
     default_session: Option<String>,
@@ -319,6 +322,10 @@ fn config_command(args: &ConfigCommand, mut config: Config) -> Result<(), TmsErr
         ),
         None => config.search_dirs,
     };
+
+    if let Some(manual_dirs) = args.manual_dirs {
+        config.manual_dirs = Some(manual_dirs.to_owned());
+    }
 
     if let Some(default_session) = args
         .default_session
