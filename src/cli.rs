@@ -323,7 +323,7 @@ fn config_command(args: &ConfigCommand, mut config: Config) -> Result<(), TmsErr
         None => config.search_dirs,
     };
 
-    if let Some(manual_dirs) = args.manual_dirs {
+    if let Some(manual_dirs) = args.manual_dirs.clone() {
         config.manual_dirs = Some(manual_dirs.to_owned());
     }
 
